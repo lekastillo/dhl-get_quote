@@ -4,7 +4,7 @@ require 'erb'
 require 'set'
 
 class Dhl::GetQuote::Request
-  attr_reader :site_id, :password, :from_country_code, :from_postal_code, :to_country_code, :to_postal_code, :duty
+  attr_reader :site_id, :password, :from_country_code, :from_postal_code, :to_country_code, :to_postal_code, :duty, :send_date
   attr_accessor :pieces
 
   URLS = {
@@ -29,6 +29,8 @@ class Dhl::GetQuote::Request
     @duty = false
 
     @pieces = []
+
+    @send_date = Time.now
   end
 
   def test_mode?
@@ -169,7 +171,7 @@ class Dhl::GetQuote::Request
   # ready dates are only mon-fri
   def ready_date(t=Time.now)
     date = Date.parse(t.to_s)
-    if (date.cwday >= 6) || (date.cwday >= 5 && t.hour >= 17)
+    @send_date = if (date.cwday >= 6) || (date.cwday >= 5 && t.hour >= 17)
       date.send(:next_day, 8-date.cwday)
     else
       date
