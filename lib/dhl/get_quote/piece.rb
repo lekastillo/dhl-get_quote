@@ -23,6 +23,7 @@ class Dhl::GetQuote::Piece
     end
 
     @piece_id = options[:piece_id] || 1
+    @package_type_code = options[:package_type_code] || 'BOX'
 
   end
 
@@ -40,6 +41,7 @@ class Dhl::GetQuote::Piece
     xml_str = <<eos
 <Piece>
   <PieceID>#{@piece_id}</PieceID>
+  <PackageTypeCode>#{@package_type_code}</PackageTypeCode>
 eos
 
     xml_str << "  <Height>#{@height}</Height>\n" if @height
